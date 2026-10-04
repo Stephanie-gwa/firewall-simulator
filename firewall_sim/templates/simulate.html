@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Simulate Traffic — Firewall Simulator{% endblock %}
+{% block content %}
+
+<h1>Simulate traffic</h1>
+<p class="muted">Submit a single simulated packet and see exactly which rule matched it, and why.</p>
+
+<div class="simulate-layout">
+  <form method="post" class="form-card">
+    <div class="form-row">
+      <label for="sample">Load a sample</label>
+      <select id="sample" onchange="loadSample(this.value)">
+        <option value="">— pick a sample scenario —</option>
+        {% for s in samples %}
+        <option value="{{ loop.index0 }}">{{ s.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="source_ip">Source IP</label>
+      <input type="text" id="source_ip" name="source_ip" value="{{ values.get('source_ip', '') }}" placeholder="10.1.2.3">
+      {% if errors.source_ip %}<div class="field-error">{{ errors.source_ip }}</div>{% endif %}
+    </div>
+    <div class="form-row">
+      <label for="protocol">Protocol</label>
+      <select id="protocol" name="protocol">
+        {% for p in ["tcp", "udp", "icmp"] %}
+        <option value="{{ p }}" {{ "selected" if values.get('protocol') == p }}>{{ p }}</option>
+        {% endfor %}
+      </select>
+      {% if errors.protocol %}<div class="field-error">{{ errors.protocol }}</div>{% endif %}
+    </div>
+    <div class="form-row">
+      <label for="dest_port">Destination port</label>
+      <input type="text" id="dest_port" name="dest_port" value="{{ values.get('dest_port', '') }}" placeholder="443">
+      {% if errors.dest_port %}<div class="field-error">{{ errors.dest_port }}</div>{% endif %}
+    </div>
+    <div class="form-row">
+      <label for="description">Description (optional)</label>
+      <input type="text" id="description" name="description" placeholder="What is this traffic?">
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Submit traffic</button>
+    </div>
+  </form>
+
+  <div class="result-panel">
+    {% if result %}
+      <div class="verdict verdict-{{ result.action }}">
+        <div class="verdict-action">{{ result.action|upper }}</div>
+        <div class="verdict-reason">{{ result.reason_summary }}</div>
+      </div>
+
+      <h3>Evaluation trace</h3>
+      <p class="muted small">Rules are checked in priority order (lowest number first). Evaluation stops at the first match.</p>
+      <table class="trace-table">
+        <thead><tr><th>#</th><th>Priority</th><th>Rule</th><th>Result</th><th>Reason</th></tr></thead>
+        <tbody>
+          {% for entry in result.trace %}
+          <tr class="{{ 'trace-match' if entry.matched }}">
+            <td class="mono">{{ loop.index }}</td>
+            <td class="mono">{{ entry.rule.priority }}</td>
+            <td>{{ entry.rule.name }} <span class="pill pill-{{ entry.rule.action }} pill-sm">{{ entry.rule.action }}</span></td>
+            <td>{% if entry.matched %}<span class="trace-badge matched">matched</span>{% else %}<span class="trace-badge">no match</span>{% endif %}</td>
+            <td class="small">{{ entry.reason }}</td>
+          </tr>
+          {% endfor %}
+          {% if result.used_default %}
+          <tr class="trace-match">
+            <td class="mono">{{ result.trace|length + 1 }}</td>
+            <td>—</td>
+            <td>Default policy</td>
+            <td><span class="trace-badge matched">applied</span></td>
+            <td class="small">No enabled rule matched.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="result-placeholder">
+        Submit traffic on the left, or pick a sample scenario, to see the evaluation trace here.
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  const samples = {{ samples|tojson }};
+  function loadSample(idx) {
+    if (idx === "") return;
+    const s = samples[parseInt(idx, 10)];
+    document.getElementById("source_ip").value = s.source_ip;
+    document.getElementById("protocol").value = s.protocol;
+    document.getElementById("dest_port").value = s.dest_port;
+    document.getElementById("description").value = s.description;
+  }
+</script>
+
+{% endblock %}

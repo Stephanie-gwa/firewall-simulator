@@ -1,0 +1,93 @@
+[
+    {
+        "action": "deny",
+        "description": "Unclassified external traffic",
+        "dest_port": 8443,
+        "id": 7,
+        "matched_rule_id": null,
+        "matched_rule_name": null,
+        "protocol": "tcp",
+        "reason_summary": "No enabled rule matched \u2014 fell through to the default policy",
+        "source_ip": "203.0.113.99",
+        "timestamp": "2026-09-23T06:08:30.330344+00:00",
+        "used_default": 1
+    },
+    {
+        "action": "deny",
+        "description": "External RDP attempt",
+        "dest_port": 3389,
+        "id": 6,
+        "matched_rule_id": 5,
+        "matched_rule_name": "Block RDP from the internet",
+        "protocol": "tcp",
+        "reason_summary": "Matched rule #5 ('Block RDP from the internet')",
+        "source_ip": "203.0.113.55",
+        "timestamp": "2026-09-23T06:08:30.324161+00:00",
+        "used_default": 0
+    },
+    {
+        "action": "deny",
+        "description": "Ping sweep from known-bad host",
+        "dest_port": 0,
+        "id": 5,
+        "matched_rule_id": 4,
+        "matched_rule_name": "Block known-bad host",
+        "protocol": "icmp",
+        "reason_summary": "Matched rule #4 ('Block known-bad host')",
+        "source_ip": "198.51.100.66",
+        "timestamp": "2026-09-23T06:08:30.317995+00:00",
+        "used_default": 0
+    },
+    {
+        "action": "deny",
+        "description": "Suspicious port probe",
+        "dest_port": 31337,
+        "id": 4,
+        "matched_rule_id": 4,
+        "matched_rule_name": "Block known-bad host",
+        "protocol": "tcp",
+        "reason_summary": "Matched rule #4 ('Block known-bad host')",
+        "source_ip": "198.51.100.66",
+        "timestamp": "2026-09-23T06:08:30.311747+00:00",
+        "used_default": 0
+    },
+    {
+        "action": "allow",
+        "description": "DNS query from internal resolver",
+        "dest_port": 53,
+        "id": 3,
+        "matched_rule_id": 1,
+        "matched_rule_name": "Allow internal LAN",
+        "protocol": "udp",
+        "reason_summary": "Matched rule #1 ('Allow internal LAN')",
+        "source_ip": "10.0.0.1",
+        "timestamp": "2026-09-23T06:08:30.305543+00:00",
+        "used_default": 0
+    },
+    {
+        "action": "allow",
+        "description": "Office HTTPS request",
+        "dest_port": 443,
+        "id": 2,
+        "matched_rule_id": 2,
+        "matched_rule_name": "Allow HTTPS",
+        "protocol": "tcp",
+        "reason_summary": "Matched rule #2 ('Allow HTTPS')",
+        "source_ip": "203.0.113.10",
+        "timestamp": "2026-09-23T06:08:30.298590+00:00",
+        "used_default": 0
+    },
+    {
+        "action": "allow",
+        "description": "Internal SSH session",
+        "dest_port": 22,
+        "id": 1,
+        "matched_rule_id": 1,
+        "matched_rule_name": "Allow internal LAN",
+        "protocol": "tcp",
+        "reason_summary": "Matched rule #1 ('Allow internal LAN')",
+        "source_ip": "10.1.1.1",
+        "timestamp": "2026-09-23T06:08:30.290952+00:00",
+        "used_default": 0
+    }
+]

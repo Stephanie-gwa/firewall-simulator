@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Event Log — Firewall Simulator{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <h1>Event log</h1>
+  <form method="post" action="{{ url_for('clear_log') }}" onsubmit="return confirm('Clear the entire event log?');">
+    <button type="submit" class="btn">Clear log</button>
+  </form>
+</div>
+
+<div class="filter-bar">
+  <a href="{{ url_for('event_log') }}" class="chip {{ 'chip-active' if not action_filter }}">All</a>
+  <a href="{{ url_for('event_log', action='allow') }}" class="chip {{ 'chip-active' if action_filter == 'allow' }}">Allowed</a>
+  <a href="{{ url_for('event_log', action='deny') }}" class="chip {{ 'chip-active' if action_filter == 'deny' }}">Denied</a>
+</div>
+
+{% include "_event_table.html" %}
+
+{% endblock %}

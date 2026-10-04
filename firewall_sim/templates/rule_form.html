@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ "Edit rule" if rule else "New rule" }} — Firewall Simulator{% endblock %}
+{% block content %}
+
+<h1>{{ "Edit rule" if rule else "New rule" }}</h1>
+
+<form method="post" class="form-card">
+  <div class="form-row">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" value="{{ values.get('name', '') }}" placeholder="e.g. Allow HTTPS">
+    {% if errors.name %}<div class="field-error">{{ errors.name }}</div>{% endif %}
+  </div>
+
+  <div class="form-row-group">
+    <div class="form-row">
+      <label for="action">Action</label>
+      <select id="action" name="action">
+        <option value="allow" {{ "selected" if values.get('action') == 'allow' }}>allow</option>
+        <option value="deny" {{ "selected" if values.get('action') == 'deny' }}>deny</option>
+      </select>
+      {% if errors.action %}<div class="field-error">{{ errors.action }}</div>{% endif %}
+    </div>
+    <div class="form-row">
+      <label for="priority">Priority</label>
+      <input type="text" id="priority" name="priority" value="{{ values.get('priority', '') }}" placeholder="10">
+      <div class="field-hint">Lower number = evaluated first.</div>
+      {% if errors.priority %}<div class="field-error">{{ errors.priority }}</div>{% endif %}
+    </div>
+  </div>
+
+  <div class="form-row-group">
+    <div class="form-row">
+      <label for="source_ip">Source IP</label>
+      <input type="text" id="source_ip" name="source_ip" value="{{ values.get('source_ip', '') }}" placeholder="any, 10.1.2.3, or 10.0.0.0/8">
+      {% if errors.source_ip %}<div class="field-error">{{ errors.source_ip }}</div>{% endif %}
+    </div>
+    <div class="form-row">
+      <label for="protocol">Protocol</label>
+      <select id="protocol" name="protocol">
+        {% for p in ["any", "tcp", "udp", "icmp"] %}
+        <option value="{{ p }}" {{ "selected" if values.get('protocol') == p }}>{{ p }}</option>
+        {% endfor %}
+      </select>
+      {% if errors.protocol %}<div class="field-error">{{ errors.protocol }}</div>{% endif %}
+    </div>
+    <div class="form-row">
+      <label for="dest_port">Destination port</label>
+      <input type="text" id="dest_port" name="dest_port" value="{{ values.get('dest_port', '') }}" placeholder="any, 443, or 8000-8100">
+      {% if errors.dest_port %}<div class="field-error">{{ errors.dest_port }}</div>{% endif %}
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label for="description">Description (optional)</label>
+    <input type="text" id="description" name="description" value="{{ values.get('description', '') }}">
+  </div>
+
+  <div class="form-row form-row-checkbox">
+    <label><input type="checkbox" name="enabled" {{ "checked" if values.get('enabled', 'on') == 'on' or rule and rule.enabled }}> Enabled</label>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">{{ "Save changes" if rule else "Create rule" }}</button>
+    <a href="{{ url_for('dashboard') }}" class="btn">Cancel</a>
+  </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+<table class="log-table">
+  <thead>
+    <tr><th>Time</th><th>Source IP</th><th>Protocol</th><th>Port</th><th>Action</th><th>Reason</th></tr>
+  </thead>
+  <tbody>
+    {% for e in (events if events is defined else recent) %}
+    <tr>
+      <td class="mono small">{{ e.timestamp[:19].replace("T", " ") }}</td>
+      <td class="mono">{{ e.source_ip }}</td>
+      <td class="mono">{{ e.protocol }}</td>
+      <td class="mono">{{ e.dest_port }}</td>
+      <td><span class="pill pill-{{ e.action }}">{{ e.action }}</span></td>
+      <td class="small">
+        {% if e.matched_rule_name %}
+          Matched <strong>{{ e.matched_rule_name }}</strong> (#{{ e.matched_rule_id }})
+        {% else %}
+          Default policy
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" class="empty-row">No traffic simulated yet. <a href="{{ url_for('simulate') }}">Try it</a>.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>

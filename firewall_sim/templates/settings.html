@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Settings — Firewall Simulator{% endblock %}
+{% block content %}
+
+<h1>Settings</h1>
+
+<div class="form-card">
+  <h3>Default policy</h3>
+  <p class="muted">Applied when no enabled rule matches a packet. Most real firewalls default to <strong>deny</strong>
+     (block everything not explicitly allowed) rather than <strong>allow</strong>.</p>
+
+  <form method="post">
+    <div class="form-row-checkbox" style="display:flex; gap:24px; margin:16px 0;">
+      <label><input type="radio" name="default_policy" value="deny" {{ "checked" if default_policy == "deny" }}> deny</label>
+      <label><input type="radio" name="default_policy" value="allow" {{ "checked" if default_policy == "allow" }}> allow</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+</div>
+
+{% endblock %}

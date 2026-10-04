@@ -1,0 +1,57 @@
+[
+    {
+        "action": "allow",
+        "description": "Trust all traffic originating from the internal network.",
+        "dest_port": "any",
+        "enabled": true,
+        "id": 1,
+        "name": "Allow internal LAN",
+        "priority": 10,
+        "protocol": "any",
+        "source_ip": "10.0.0.0/8"
+    },
+    {
+        "action": "allow",
+        "description": "Allow inbound HTTPS from anywhere.",
+        "dest_port": "443",
+        "enabled": true,
+        "id": 2,
+        "name": "Allow HTTPS",
+        "priority": 20,
+        "protocol": "tcp",
+        "source_ip": "any"
+    },
+    {
+        "action": "allow",
+        "description": "Allow DNS queries.",
+        "dest_port": "53",
+        "enabled": true,
+        "id": 3,
+        "name": "Allow DNS",
+        "priority": 30,
+        "protocol": "udp",
+        "source_ip": "any"
+    },
+    {
+        "action": "deny",
+        "description": "Blocklisted source (example malicious host, RFC 5737 doc range).",
+        "dest_port": "any",
+        "enabled": true,
+        "id": 4,
+        "name": "Block known-bad host",
+        "priority": 40,
+        "protocol": "any",
+        "source_ip": "198.51.100.66"
+    },
+    {
+        "action": "deny",
+        "description": "Remote Desktop should never be exposed to the open internet.",
+        "dest_port": "3389",
+        "enabled": true,
+        "id": 5,
+        "name": "Block RDP from the internet",
+        "priority": 50,
+        "protocol": "tcp",
+        "source_ip": "any"
+    }
+]

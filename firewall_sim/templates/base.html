@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Firewall Simulator{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="sim-banner">
+  Simulation only — this tool never modifies your computer's real firewall or network configuration.
+</div>
+
+<header class="topbar">
+  <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">▦</span> Firewall Simulator</a>
+  <nav>
+    <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' }}">Rules</a>
+    <a href="{{ url_for('simulate') }}" class="{{ 'active' if request.endpoint == 'simulate' }}">Simulate Traffic</a>
+    <a href="{{ url_for('event_log') }}" class="{{ 'active' if request.endpoint == 'event_log' }}">Event Log</a>
+    <a href="{{ url_for('settings') }}" class="{{ 'active' if request.endpoint == 'settings' }}">Settings</a>
+  </nav>
+</header>
+
+<main class="content">
+  {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

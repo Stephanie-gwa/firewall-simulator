@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Rules — Firewall Simulator{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <div>
+    <h1>Rules</h1>
+    <p class="muted">Evaluated top to bottom — the first enabled rule that matches decides the outcome.
+       Default policy if nothing matches: <span class="pill pill-{{ default_policy }}">{{ default_policy }}</span></p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('new_rule') }}">+ New rule</a>
+</div>
+
+<div class="stat-row">
+  <div class="stat-card"><div class="stat-value">{{ rules|length }}</div><div class="stat-label">Rules</div></div>
+  <div class="stat-card"><div class="stat-value stat-allow">{{ counts.allow }}</div><div class="stat-label">Allowed (logged)</div></div>
+  <div class="stat-card"><div class="stat-value stat-deny">{{ counts.deny }}</div><div class="stat-label">Denied (logged)</div></div>
+</div>
+
+<table class="rule-table">
+  <thead>
+    <tr>
+      <th>Priority</th><th>Name</th><th>Action</th><th>Source IP</th>
+      <th>Protocol</th><th>Dest. port</th><th>Status</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for rule in rules %}
+    <tr class="{{ 'rule-disabled' if not rule.enabled }}">
+      <td class="mono">{{ rule.priority }}</td>
+      <td>
+        <div class="rule-name">{{ rule.name }}</div>
+        {% if rule.description %}<div class="rule-desc">{{ rule.description }}</div>{% endif %}
+      </td>
+      <td><span class="pill pill-{{ rule.action }}">{{ rule.action }}</span></td>
+      <td class="mono">{{ rule.source_ip }}</td>
+      <td class="mono">{{ rule.protocol }}</td>
+      <td class="mono">{{ rule.dest_port }}</td>
+      <td>
+        <form method="post" action="{{ url_for('toggle_rule', rule_id=rule.id) }}" class="inline-form">
+          <button type="submit" class="status-toggle {{ 'on' if rule.enabled else 'off' }}">
+            {{ "enabled" if rule.enabled else "disabled" }}
+          </button>
+        </form>
+      </td>
+      <td class="row-actions">
+        <a href="{{ url_for('edit_rule', rule_id=rule.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('delete_rule', rule_id=rule.id) }}" class="inline-form"
+              onsubmit="return confirm('Delete rule &quot;{{ rule.name }}&quot;?');">
+          <button type="submit" class="link-danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8" class="empty-row">No rules yet. <a href="{{ url_for('new_rule') }}">Create one</a>.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="page-head" style="margin-top:32px">
+  <h2>Recent activity</h2>
+  <a href="{{ url_for('event_log') }}">View full log →</a>
+</div>
+{% include "_event_table.html" %}
+
+{% endblock %}

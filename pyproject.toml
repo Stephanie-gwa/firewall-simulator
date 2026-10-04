@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "firewall-sim"
+version = "1.0.0"
+description = "A firewall rule simulator with a Flask web dashboard — create allow/deny rules, submit simulated traffic, and see which rule matched and why. Does not touch your real firewall."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = ["Flask>=3.0,<4.0"]
+
+[tool.setuptools]
+packages = ["firewall_sim"]
